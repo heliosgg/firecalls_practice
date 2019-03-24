@@ -1,1 +1,1 @@
-# firecalls_practice
+Loads open dataset from data.mos.ru and shows average count of calls to Fire Service for every month from 2015.
