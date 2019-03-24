@@ -9,8 +9,33 @@ from secret_key import api_key
 dataset_id = '1950'
 link = 'https://apidata.mos.ru/v1/datasets/' + dataset_id + '/rows?api_key=' + api_key
 
-response = requests.get(link)
-data = response.text
+data = ''
+
+def SaveToBackup(info):
+    with open('backup.txt', 'w') as f:
+        f.write(info)
+
+def LoadBackup():
+    result = ''
+
+    try:
+        with open('backup.txt', 'r') as f:
+            result = f.read()
+    except FileNotFoundError:
+        exit
+
+    return result
+
+try:
+    response = requests.get(link)
+
+    if response.status_code == 200:
+        data = response.text
+        SaveToBackup(data)
+    else:
+        data = LoadBackup()
+except requests.exceptions.ConnectionError:
+    data = LoadBackup()
 
 month_count = {
     'январь' : 0,
@@ -81,7 +106,7 @@ plt.ylim(top=max_calls + 100)
 
 plt.xlabel('месяцы')
 plt.ylabel('количество вызовов')
-plt.savefig('result.png', dpi = 300)
+plt.savefig('result.png', dpi=300)
 plt.show()
 
-print(month_count)
+# print(month_count)
